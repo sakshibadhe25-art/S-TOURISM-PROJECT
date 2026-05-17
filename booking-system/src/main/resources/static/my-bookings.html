@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Bookings</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<header>
+    <h2 class="logo">S TOURISM</h2>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="booking.html">New Booking</a>
+        <a href="contact.html">Contact</a>
+        <button onclick="logout()" class="small-btn">Logout</button>
+    </nav>
+</header>
+
+<section class="info">
+    <h2>My Booking History</h2>
+    
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Booked Date</th> 
+                    <th>Package</th>
+                    <th>Travel Date</th>
+                    <th>People</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th> 
+                </tr>
+            </thead>
+            <tbody id="bookingTable">
+            </tbody>
+        </table>
+        <p id="no-bookings" style="text-align:center; display:none; margin-top:20px;">No bookings found.</p>
+    
+</section>
+
+<script>
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!user) {
+        window.location.href = "login.html";
+    }
+
+    // 2. Variable to store all bookings so we can access them later
+    let myBookingsList = [];
+
+    async function loadBookings() {
+        try {
+            const response = await fetch('http://localhost:8080/api/bookings/' + user.email);
+            
+            if (response.ok) {
+                // Save data to the global variable
+                myBookingsList = await response.json(); 
+                
+                const table = document.getElementById("bookingTable");
+                table.innerHTML = "";
+
+                if (myBookingsList.length === 0) {
+                    document.getElementById("no-bookings").style.display = "block";
+                } else {
+                    document.getElementById("no-bookings").style.display = "none";
+                }
+
+                // Loop through using index (i) to identify which button is clicked
+                myBookingsList.forEach((booking, index) => {
+                    let statusClass = booking.paymentStatus === 'Paid' ? 'status-paid' : 'status-pending';
+                    let displayStatus = booking.paymentStatus || 'Pending';
+                    let bId = booking.bookingId || '---';
+                    
+                    // 2. GET BOOKING DATE (Handle empty ones)
+                    let bDate = booking.bookingDate || '-'; 
+
+                    let row = `<tr>
+                        <td><strong>${bId}</strong></td>
+                        
+                        <td style="color: blue; font-weight: bold;">${bDate}</td>
+                        
+                        <td><strong>${booking.packageName}</strong></td>
+                        <td>${booking.travelDate}</td>
+                        <td>${booking.people}</td>
+                        <td>₹${booking.totalAmount}</td>
+                        <td><span class="${statusClass}">${displayStatus}</span></td>
+                        <td>
+                            <button class="small-btn" onclick="viewTicket(${index})">View Ticket</button>
+                        </td>
+                    </tr>`;
+                    table.innerHTML += row;
+                });
+            } else {
+                console.error("Failed to load bookings");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
+
+    // 4. Function to View Ticket
+    function viewTicket(index) {
+        // Get the specific booking object from our list
+        const selectedBooking = myBookingsList[index];
+
+        // Save it to localStorage as "bookingDetails" (same as what ticket.html expects)
+        localStorage.setItem("bookingDetails", JSON.stringify(selectedBooking));
+
+        // Go to ticket page
+        window.location.href = "ticket.html";
+    }
+
+    loadBookings();
+
+    function logout() {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "login.html";
+    }
+</script>
+<footer>
+    <p>S Tourism Make A Beautiful Trip</p>
+</footer>
+</body>
+</html>

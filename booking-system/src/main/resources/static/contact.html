@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* 1. The Contact Card */
+        .contact-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px black;
+            width: 100%;
+            max-width: 400px;
+            text-align: center; /* Centers the text for a clean look */
+        }
+
+        .contact-container h2 {
+            margin-top: 0;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        /* 2. Info Boxes */
+        .info-box {
+            background-color: #fcfcfc;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .info-box:hover {
+            transform: translateY(-3px);
+            border-color: #dc2626; /* Highlights red on hover */
+        }
+
+        .label {
+            display: block;
+            color: #666;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        /* 3. Links */
+        .contact-link {
+            color: #dc2626; /* Your Theme Red */
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .contact-link:hover {
+            color: #b91c1c;
+            text-decoration: underline;
+        }
+
+        .address-text .contact-text{
+            color: #333;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+<header>
+    <h2 class="logo">S TOURISM</h2>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="login.html">Login / Register</a>
+        <a href="contact.html">Contact</a>
+        <a href="my-bookings.html">My Bookings</a>
+    </nav>
+</header>
+<section class="info">
+    <h2>Ready to help you 24/7.</h2>
+    <div class="contact-container">
+        <h2>Contact Us</h2>
+        
+        <div class="info-box">
+            <span class="label">Email Us</span>
+            <a href="mailto:support@example.com" class="contact-link">support@example.com</a>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Call Us</span> 
+            <div class="contact-text">+91 88XXXXXXXX</div>
+        </div>
+
+        <div class="info-box">
+            <span class="label">Visit Us</span>
+            <div class="address-text">
+                123 PUNE Street<br>
+                Pune, Maharashtra<br>
+                India
+            </div>
+        </div>
+
+    </div>
+</section>
+    <!-- FOOTER -->
+<footer>
+    <p>S Tourism Make A Beautiful Trip</p>
+</footer>
+</body>
+</html>

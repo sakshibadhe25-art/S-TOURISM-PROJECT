@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        table { width: 98%; margin: 20px auto; border-collapse: collapse; background: white; font-size: 14px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: orangered; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        .header-admin { display: flex; justify-content: space-between; padding: 20px 5%; background: #fbff00; color: black; }
+        
+    </style>
+</head>
+<body>
+    <script>
+    // SECURITY CHECK
+    // If the "Key" is missing, kick them back to login page
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        window.location.href = "login.html";
+    }
+</script>
+
+    <div class="header-admin">
+        <h2>Admin Dashboard</h2>
+        <button onclick="logoutAdmin()" class="small-btn">Logout</button>
+    </div>
+
+    <h3 style="text-align: center; margin-top: 20px;">All User Bookings</h3>
+    <p style="text-align: center; font-weight: bold;">Total Records: <span id="totalCount">0</span></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Sr No</th>
+                <th>Booking ID</th>
+                <th>User Email</th>
+                <th>Booked Date</th> <th>Travel Date</th>
+                <th>Package</th>
+                <th>People</th>
+                <th>Amount</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+    </table>
+
+    <script>
+        async function loadAllBookings() {
+            try {
+                let response = await fetch('/api/bookings/all'); 
+                if (response.ok) {
+                    let bookings = await response.json();
+                    document.getElementById("totalCount").innerText = bookings.length;
+
+                    let rows = "";
+                    bookings.forEach((b, index) => {
+                        let color = b.paymentStatus === 'Paid' ? 'green' : 'orange';
+                        
+                        rows += `
+                            <tr>
+                                <td><b>${index + 1}</b></td>
+                                <td>${b.bookingId}</td>
+                                <td>${b.userEmail}</td>
+                                <td style="color:blue; font-weight:bold;">${b.bookingDate}</td>
+                                <td>${b.travelDate}</td>
+                                <td>${b.packageName}</td>
+                                <td>${b.people}</td>
+                                <td>₹${b.totalAmount}</td>
+                                <td style="color:${color}; font-weight:bold;">${b.paymentStatus}</td>
+                            </tr>
+                        `;
+                    });
+                    document.getElementById("tableBody").innerHTML = rows;
+                } else {
+                    document.getElementById("tableBody").innerHTML = "<tr><td colspan='9'>No bookings found.</td></tr>";
+                }
+            } catch (error) { console.error(error); }
+        }
+
+        function logoutAdmin() {
+            if(confirm("Logout?")) {
+                localStorage.removeItem("isAdminLoggedIn");
+                window.location.href = "admin-login.html";
+            }
+        }
+        loadAllBookings();
+    </script>
+</body>
+</html>

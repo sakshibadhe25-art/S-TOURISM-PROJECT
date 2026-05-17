@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tour Ticket</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .ticket {
+            width: 400px;
+            margin: auto;
+            border: 2px dashed #0c0c3c;
+            padding: 20px;
+        }
+
+        .ticket h2 {
+            text-align: center;
+            color: #0c0c3c;
+        }
+
+        .ticket p {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h2 class="logo">S TOURISM</h2>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="contact.html">Contact</a>
+    </nav>
+</header>
+
+<section class="info">
+    <h2>Your Ticket</h2>
+    <div class="card">
+    <div class="ticket" id="ticketArea">
+        <h2>Tourism Booking Ticket</h2>
+        <hr>
+        <p><strong>Booking ID:</strong> <span id="ticketBid" style="color:red; font-weight:bold;"></span></p> 
+        
+        <p><strong>Booked On:</strong> <span id="bookedDate" style="color: #555;"></span></p>
+
+        <hr>
+        <p><strong>Package:</strong> <span id="pkg"></span></p>
+        <p><strong>Travel Date:</strong> <span id="date"></span></p>
+        <p><strong>Price per Person:</strong> ₹<span id="pricePerPerson"></span></p>
+        <p><strong>No of People:</strong> <span id="people"></span></p>
+        <p><strong>Total Amount Paid:</strong> ₹<span id="total"></span></p>
+        <p><strong>Payment Status:</strong> <span id="payStatus"></span></p>
+
+        <hr>
+        <p id="finalStatus" style="text-align:center; font-weight: bold; font-size: 1.2em;"></p>
+    </div>
+
+    <br>
+    <div style="text-align:center;">
+        <button class="btn" onclick="printTicket()">Download / Print Ticket</button>
+    </div>
+    </div>
+</section>
+
+<script>
+    function printTicket() {
+        window.print();
+    }
+    
+    // Get booking details
+    let booking = JSON.parse(localStorage.getItem("bookingDetails"));
+
+    if (!booking) {
+        alert("No booking found!");
+        window.location.href = "packages.html";
+    }
+
+    // Fill in the details
+    document.getElementById("ticketBid").innerText = booking.bookingId || "Pending"; 
+    
+    // 2. SHOW BOOKED DATE (Handle if empty)
+    document.getElementById("bookedDate").innerText = booking.bookingDate || "-";
+
+    document.getElementById("pkg").innerText = booking.packageName;
+    document.getElementById("date").innerText = booking.travelDate;
+    document.getElementById("people").innerText = booking.people;
+    document.getElementById("pricePerPerson").innerText = booking.pricePerPerson;
+    document.getElementById("total").innerText = booking.totalAmount;
+
+    // --- NEW LOGIC FOR STATUS COLORS ---
+    const statusSpan = document.getElementById("payStatus");
+    const finalMsg = document.getElementById("finalStatus");
+
+    // Check if the status is "Paid" or "Pending"
+    if (booking.paymentStatus === 'Paid') {
+        // GREEN for Paid
+        statusSpan.innerText = "PAID";
+        statusSpan.style.color = "green";
+        
+        finalMsg.innerText = "Booking Confirmed ✔";
+        finalMsg.style.color = "green";
+    } else {
+        // ORANGE/RED for Pending
+        statusSpan.innerText = "PENDING (Pay at Office)";
+        statusSpan.style.color = "orange";
+        
+        finalMsg.innerText = "⚠ Booking Pending";
+        finalMsg.style.color = "orange";
+    }
+</script>
+<footer>
+    <p>S Tourism Make A Beautiful Trip</p>
+</footer>
+</body>
+</html>

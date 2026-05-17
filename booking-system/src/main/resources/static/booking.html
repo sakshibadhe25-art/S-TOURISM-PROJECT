@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book a Trip</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header>
+    <h2 class="logo">S TOURISM</h2>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="packages.html">Packages</a>
+        <a href="contact.html">Contact</a>
+        <a href="my-bookings.html">My Bookings</a>
+    </nav>
+</header>
+
+<section class="info">
+    <h2>Book Your Trip</h2>
+    <form class="card" onsubmit="confirmBooking(event)">
+        
+        <label>Your Email:</label>
+        <input type="email" id="userEmail" readonly style="background-color: #e0e0e0; cursor: not-allowed;">
+        <br><br>
+
+        <label>Select Package:</label>
+        <select id="package" required onchange="updatePrice()">
+            <option value="" selected disabled>Select Your Package</option>
+            <option value="Pune">Pune - ₹ 5999</option>
+            <option value="Mumbai">Mumbai - ₹ 9999</option>
+            <option value="Rajasthan">Rajasthan - ₹ 20999</option>
+        </select>
+        <br><br>
+
+        <label>Number of People:</label>
+        <input type="number" id="people" value="1" min="1" max="20" required oninput="updatePrice()">
+        <br><br>
+
+        <label>Travel Date:</label>
+        <input type="date" id="date" required>
+        <br><br>
+
+        <h3 style="color: #007bff;">Total Price: ₹ <span id="totalPrice"> 0 </span></h3>
+        
+        <button class="btn">Confirm Booking</button>
+    </form>
+</section>
+
+<script>
+    // 1. CHECK LOGIN STATUS
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+    if (!user) {
+        alert("You must login first!");
+        window.location.href = "login.html";
+    } else {
+        document.getElementById("userEmail").value = user.email;
+    }
+    // --- 1. PREVENT PAST DATES ---
+    // Get tomorrow's date
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Move to next day
+
+    // Format to YYYY-MM-DD (required for HTML date input)
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    const minDate = `${yyyy}-${mm}-${dd}`;
+
+    // Set the minimum attribute
+    document.getElementById("date").min = minDate;
+
+    // 2. AUTOMATIC PRICE CALCULATOR
+    function updatePrice() {
+        // Define the price list
+        const prices = {
+            "Pune": 5999,
+            "Mumbai": 9999,
+            "Rajasthan": 20999,
+        };
+
+        // Get the user's choices
+        const selectedPackage = document.getElementById("package").value;
+        const numberOfPeople = parseInt(document.getElementById("people").value) || 1;
+
+        // --- FIX: CHECK IF A VALID PACKAGE IS SELECTED ---
+        // If user is on "Select Your Package", it won't find a price in the list
+        if (!prices[selectedPackage]) {
+            document.getElementById("totalPrice").innerText = "0";
+            return; // Stop the function here
+        }
+
+        // Math: Price * People
+        const pricePerPerson = prices[selectedPackage];
+        const total = pricePerPerson * numberOfPeople;
+
+        // Show the result on screen
+        document.getElementById("totalPrice").innerText = total;
+    }
+
+    // 3. GO TO PAYMENT PAGE (Do not save to DB yet)
+    function confirmBooking(e) {
+        e.preventDefault();
+
+        const selectedPackage = document.getElementById("package").value;
+        
+        if (!selectedPackage || selectedPackage === "Select Your Package") {
+            alert("Please select a package first!");
+            return;
+        }
+
+        // --- NEW: Define prices here so we can save the unit price ---
+        const prices = {
+            "Pune": 5999,
+            "Mumbai": 9999,
+            "Rajasthan": 20999,
+        };
+
+        // Create a temporary booking object
+        let bookingData = {
+            userEmail: user.email,
+            packageName: selectedPackage,
+            people: parseInt(document.getElementById("people").value),
+            travelDate: document.getElementById("date").value,
+            
+            // --- NEW: Save the single price explicitly ---
+            pricePerPerson: prices[selectedPackage], 
+            
+            totalAmount: parseFloat(document.getElementById("totalPrice").innerText)
+        };
+
+        localStorage.setItem("tempBooking", JSON.stringify(bookingData));
+        window.location.href = "payment.html";
+    }
+
+    function logout() {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "login.html";
+    }
+</script>
+<!-- FOOTER -->
+<footer>
+    <p>S Tourism Make A Beautiful Trip</p>
+</footer>
+</body>
+</html>

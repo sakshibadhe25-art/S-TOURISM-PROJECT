@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - S Tourism</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Small style addition for the link */
+        .forgot-link {
+            display: block;
+            margin-top: -10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+            text-align: right;
+            color: #555;
+            text-decoration: none;
+        }
+        .forgot-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header>
+        <h2 class="logo">S TOURISM</h2>
+        <nav class="navbar">
+            <a href="index.html">Home</a>
+            <a href="packages.html">Packages</a>
+            <a href="contact.html">Contact</a>
+            <a href="my-bookings.html">My Bookings</a>
+        </nav>
+    </header>
+
+    <section class="info">
+        <h2>Login</h2>
+        <div class="login-container">
+            <form onsubmit="universalLogin(event)" class="card">
+                <input type="text" id="email" placeholder="Enter Email" required>
+                <input type="password" id="password" placeholder="Enter Password" required>
+                
+                <a href="forgot-password.html" class="forgot-link">Forgot Password?</a>
+                
+                <button type="submit" class="btn">Login</button>
+                
+                <p>Don't have an account?</p>
+                <a href="register.html" class="smallbtn">Register</a>
+            </form>
+            <p id="error-msg" style="color:red; margin-top:10px;"></p>
+        </div>
+    </section>
+
+    <script>
+        async function universalLogin(event) {
+            event.preventDefault();
+            
+            const emailInput = document.getElementById("email").value;
+            const passwordInput = document.getElementById("password").value;
+            const errorMsg = document.getElementById("error-msg");
+
+            if (emailInput === "admin" && passwordInput === "admin123") {
+                alert("Welcome, Admin!");
+                localStorage.setItem("isAdminLoggedIn", "true");
+                window.location.href = "admin.html";
+                return;
+            }
+
+            errorMsg.innerText = "Checking...";
+            const userData = { email: emailInput, password: passwordInput };
+
+            try {
+                const response = await fetch('http://localhost:8080/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem("loggedInUser", JSON.stringify(data));
+                    window.location.href = "booking.html";
+                } else {
+                    const message = await response.text(); 
+                    errorMsg.innerText = "Error: " + message;
+                }
+            } catch (error) {
+                errorMsg.innerText = "Server is offline.";
+            }
+        }
+    </script>
+
+    <footer>
+        <p>S Tourism Make A Beautiful Trip</p>
+    </footer>
+</body>
+</html>
