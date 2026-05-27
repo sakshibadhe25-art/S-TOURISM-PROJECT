@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="S Tourism" content="tourism, tourism booking system,travel, S-TOURISM">
+    <title>Tourism Booking System</title>
+    <link rel="stylesheet" href="booking-system/src/main/resources/static/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header>
+    <h2 class="logo">S TOURISM</h2>
+    <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="booking-system/src/main/resources/static/packages.html">Packages</a>
+        <a href="booking-system/src/main/resources/static/login.html">Login / Register</a>
+        <a href="booking-system/src/main/resources/static/contact.html">Contact</a>
+        <a href="booking-system/src/main/resources/static/my-bookings.html">My Bookings</a>
+        <button onclick="logout()" class="small-btn">Logout</button>
+    </nav>
+</header>
+
+<!-- Slogan SECTION -->
+<section class="slogan">
+    <h1>Book your dream tour with S TOURISM</h1>
+</section>
+<section class="smallbtn">
+    <a href="booking-system/src/main/resources/static/packages.html">View Packages</a>
+</section>
+
+<!-- TOURISM INFO -->
+<section class="info">
+    <h2>Popular Destinations</h2>
+    <div class="cards">
+        <div class="card">
+            <img src="booking-system/src/main/resources/static/Img/pune.jfif" height="150px" width="260px">
+            <h2>Pune Travell </h2>
+            <p>Pune City</p>
+            <h4>2 Day 1 Night</h4>
+            <a href="booking-system/src/main/resources/static/pune.html" class="btn">View More</a>
+        </div>
+
+        <div class="card">
+            <img src="booking-system/src/main/resources/static/Img/mumbai.jpg" height="150px" width="260px">
+            <h2>Mumbai Travell </h2>
+            <p>Colaba,Worli,Western Suburbs</p>
+            <h4>3 Days 2 Nights </h4>
+            <a href="booking-system/src/main/resources/static/mumbai.html" class="btn">View More</a>
+        </div>
+    </div>
+</section>
+<div class="cards">
+    <div class="img">
+        <img src="booking-system/src/main/resources/static/Img/amer.jpg" height="200px" width="260px">
+        <img src="booking-system/src/main/resources/static/Img/marine-drive.jpg" height="200px" width="260px">
+        <img src="booking-system/src/main/resources/static/Img/Elephanta-Caves-.jpg" height="200px" width="260px">
+        <img src="booking-system/src/main/resources/static/Img/Bridge.jpg" height="200px" width="260px">
+        <img src="booking-system/src/main/resources/static/Img/birla-temple.jpg" height="200px" width="260px">
+    </div>
+</div>
+<!-- FOOTER -->
+<footer>
+    <p>S Tourism Make A Beautiful Trip</p>
+</footer>
+<script>
+    function logout() 
+    {
+        localStorage.removeItem("loggedInUser");
+        window.location.href = "booking-system/src/main/resources/static/login.html";
+    }
+</script>
+</body>
+</html>
